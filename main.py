@@ -1,5 +1,5 @@
 from typing import List, Set, Tuple
-from util.suffix import Type, HasMajorHarmony
+from util.suffix import Type
 import util.word_methods as wrd
 from util.decomposer import SUFFIX_TRANSITIONS, is_valid_transition, get_pekistirme_analyses
 
@@ -13,7 +13,7 @@ def apply_bidirectional_harmony(word: str, suffix_text: str) -> str:
     if not suffix_text:
         return suffix_text
 
-    harmony = wrd.major_harmony(word) #
+    harmony = wrd.major_harmony(word) 
     chars = list(suffix_text)
     new_chars = []
 
@@ -43,7 +43,7 @@ def generate_pekistirme_candidates(root: str) -> List[str]:
     # 1. Find first vowel for prefix generation
     first_vowel_idx = -1
     for i, char in enumerate(root):
-        if char in wrd.VOWELS: #
+        if char in wrd.VOWELS: 
             first_vowel_idx = i
             break
     
@@ -69,7 +69,7 @@ def generate_pekistirme_candidates(root: str) -> List[str]:
     # 3. Validate using decomposer logic
     for cand in candidates:
         # get_pekistirme_analyses returns a list of tuples: (root, pos, chain, final_pos)
-        analyses = get_pekistirme_analyses(cand) #
+        analyses = get_pekistirme_analyses(cand) 
         
         # Check if any analysis points back to our original root
         for analysis in analyses:
@@ -103,7 +103,7 @@ def should_add_to_results(target_pos_filter: str, current_pos: str) -> bool:
 def savyaradan(
     root: str, 
     max_suffix_count: int = 3, 
-    allowed_max_group: int = 15,
+    allowed_max_group: int = 300, # Updated from 15 to 300 to match new SuffixGroup hierarchy
     target_pos: str = None
 ) -> List[str]:
     """
@@ -112,9 +112,9 @@ def savyaradan(
     
     # 1. Initialize Queue
     queue = []
-    if wrd.can_be_noun(root): #
+    if wrd.can_be_noun(root): 
         queue.append((root, 'noun', []))
-    if wrd.can_be_verb(root): #
+    if wrd.can_be_verb(root): 
         queue.append((root, 'verb', []))
         
     generated_words = set()
@@ -141,7 +141,7 @@ def savyaradan(
             continue
 
         # 2. Get Candidates
-        possible_transitions = SUFFIX_TRANSITIONS.get(current_pos, {}) #
+        possible_transitions = SUFFIX_TRANSITIONS.get(current_pos, {}) 
         
         for target_pos_key, suffix_list in possible_transitions.items():
             for suffix in suffix_list:
@@ -152,7 +152,7 @@ def savyaradan(
                 if suffix.comes_to == Type.VERB and current_pos != 'verb': continue
                 
                 if chain:
-                    if not is_valid_transition(chain[-1], suffix): continue #
+                    if not is_valid_transition(chain[-1], suffix): continue 
                 
                 if suffix.is_unique and any(s.name == suffix.name for s in chain):
                     continue
@@ -169,11 +169,11 @@ def savyaradan(
 
                 # --- Standard Generation ---
                 # Suffix form generation
-                raw_forms = suffix.form(current_text) #
+                raw_forms = suffix.form(current_text) 
                 
                 for form_part in raw_forms:
                     # Fix Harmony using Utility-based function
-                    if suffix.major_harmony == HasMajorHarmony.Yes:
+                    if suffix.has_major_harmony:
                         final_suffix_part = apply_bidirectional_harmony(current_text, form_part)
                     else:
                         final_suffix_part = form_part
@@ -203,6 +203,6 @@ if __name__ == "__main__":
         if not test_root: break
         
         print(f"\n--- {test_root} için sonuçlar ---")
-        results = savyaradan(test_root, max_suffix_count=1)
+        results = savyaradan(test_root, max_suffix_count=2)
         for w in results:
             print(w)
