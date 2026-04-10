@@ -1,6 +1,6 @@
-# Savyar: Turkish Morphological Analyzer & Generator
+# savyaradanadan: Turkish Morphological Analyzer & Generator
 
-Savyar is a robust, rule-based computational linguistics engine designed for the Turkish language. It provides a complete pipeline to programmatically decompose complex Turkish words into all grammatically legal root-suffix chains, as well as generate valid word forms from base roots.
+savyaradanadan is a robust, rule-based computational linguistics engine designed for the Turkish language. It provides a complete pipeline to programmatically decompose complex Turkish words into all grammatically legal root-suffix chains, as well as generate valid word forms from base roots.
 
 ## Key Features
 
@@ -20,7 +20,7 @@ Savyar is a robust, rule-based computational linguistics engine designed for the
 ## Project Structure
 
 ```text
-savyar/
+savyaradan/
 ├── main.py                  # CLI entry point and generation logic (savyaradan)
 ├── data/
 │   └── words.txt            # Base dictionary of Turkish lemmas
